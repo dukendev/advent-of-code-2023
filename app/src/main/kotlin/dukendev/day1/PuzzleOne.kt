@@ -15,6 +15,7 @@ class PuzzleOne {
      * @calibration : each line first and last num as first and second digit of num
      * @answer : sum of all calibration values
      **/
+
     fun getSumOfCalibrationValues(input : List<String> = getInputData()): Int {
         return input.sumOf {
             val digits = parseNumerals(it)
