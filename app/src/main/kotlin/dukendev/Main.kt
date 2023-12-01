@@ -3,11 +3,10 @@
  */
 package dukendev
 
-import java.io.File
+import dukendev.day1.PuzzleOne
 
 
 fun main() {
-    val file = File("/Users/sanjeetyadav/dev/advent-of-code-2023/app/src/main/kotlin/dukendev/day1/part1.txt")
-    println(file.readLines())
-    println("Hello, Advent of Code 2023")
+    val puzzleOne = PuzzleOne()
+    println(puzzleOne.getSumOfCalibrationValues())
 }
