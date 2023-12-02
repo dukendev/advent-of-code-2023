@@ -47,6 +47,9 @@ class TestPuzzle1 {
         assertEquals(Pair(8,3),puzzleOne.parseSpelledNumerals("eightwothree"))
         assertEquals(Pair(3,2),puzzleOne.parseSpelledNumerals("3oneeighttwo"))
         assertEquals(Pair(2,6),puzzleOne.parseSpelledNumerals("2fourghsixptk"))
+        assertEquals(Pair(6,5),puzzleOne.parseSpelledNumerals("sixsix35"))
+        assertEquals(Pair(2,2),puzzleOne.parseSpelledNumerals("two"))
+        assertEquals(Pair(3,2),puzzleOne.parseSpelledNumerals("3tworxcbnqlhv"))
     }
 
 

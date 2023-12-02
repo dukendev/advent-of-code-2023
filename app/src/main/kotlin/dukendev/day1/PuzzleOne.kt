@@ -10,7 +10,7 @@ class PuzzleOne {
     private val reveredDigits = spelledDigits.map {
         it.reversed()
     }
-    private val startMatch = setOf('o', 't', 'f', 'e', 'n')
+    private val startMatch = setOf('o', 't', 'f', 'e', 'n', 's')
     private val endMatch = setOf('e', 'o', 'r', 'x', 'n', 't')
 
     private fun getInputData(): List<String> {
@@ -41,20 +41,32 @@ class PuzzleOne {
         println("numeral : ${numeralDigits.first} and ${numeralDigits.second}")
         val spelledDigits: Pair<Pair<Int, Int>, Pair<Int, Int>> = getSpelledDigits(s)
         println("spell : ${spelledDigits.first} and ${spelledDigits.second}")
-        val first: Int = if (numeralDigits.first.first < spelledDigits.first.first) {
-            numeralDigits.first.second
-        } else {
-            spelledDigits.first.second
+
+        val finalList : List<Pair<Int,Int>> = listOf(numeralDigits.first,numeralDigits.second,spelledDigits.first,spelledDigits.second).filter {
+            it.first in 0..9999
+        }
+        var first = 0
+        var second = 0
+        var max = Int.MIN_VALUE
+        var min = Int.MAX_VALUE
+        for(p in finalList){
+            max = maxOf(p.first,max)
+            min = minOf(p.first,min)
         }
 
-        val second: Int = if (numeralDigits.second.first > spelledDigits.second.first) {
-            numeralDigits.second.second
-        } else {
-            spelledDigits.second.second
+        for(p in finalList) {
+            if(p.first == min){
+                first = p.second
+            }
+            if(p.first == max){
+                second = p.second
+            }
         }
+
         println("final : ${first} and ${second}")
         return Pair(first, second)
     }
+
     private fun getSpelledDigits(s: String): Pair<Pair<Int, Int>, Pair<Int, Int>> {
         var first: Pair<Int, Int> = Pair(Int.MAX_VALUE, 0)
         var last: Pair<Int, Int> = Pair(Int.MIN_VALUE, 0)
@@ -63,9 +75,7 @@ class PuzzleOne {
         while (i < s.length && j < s.length) {
             if (startMatch.contains(s[i])) {
                 val guess = s.slice(i..j)
-                println(guess)
                 if (spelledDigits.contains(guess)) {
-                    println(guess)
                     first = Pair(i, guess.mapSpell())
                     break
                 } else {
@@ -75,12 +85,11 @@ class PuzzleOne {
                 i++
             }
             //reset
-            if(j - i > 6){
+            if (j - i > 6) {
                 i++
                 j = i + 2
             }
         }
-        println()
         i = 0
         j = 2
         val r = s.reversed()
@@ -88,7 +97,6 @@ class PuzzleOne {
             if (endMatch.contains(r[i])) {
                 val guess = r.slice(i..j)
                 if (reveredDigits.contains(guess)) {
-                    println(guess)
                     last = Pair(r.length - j - 1, guess.reversed().mapSpell())
                     break
                 } else {
@@ -99,7 +107,7 @@ class PuzzleOne {
                 j++
             }
             //reset
-            if(j - i > 6){
+            if (j - i > 6) {
                 i++
                 j = i + 2
             }
@@ -107,10 +115,11 @@ class PuzzleOne {
 
         return Pair(first, last)
     }
+
     private fun getNumeralDigits(s: String): Pair<Pair<Int, Int>, Pair<Int, Int>> {
 
-        if(s.all { !it.isDigit() }){
-            return Pair(Pair(Int.MAX_VALUE,0), Pair(Int.MIN_VALUE,0))
+        if (s.all { !it.isDigit() }) {
+            return Pair(Pair(Int.MAX_VALUE, 0), Pair(Int.MIN_VALUE, 0))
         }
 
         var i = 0
@@ -179,6 +188,7 @@ class PuzzleOne {
             else -> 0
         }
     }
+
     private fun getCalibrationValue(first: Int, second: Int): Int = 10.times(first).plus(second)
 
 
