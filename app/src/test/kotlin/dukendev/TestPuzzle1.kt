@@ -8,11 +8,6 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 
 class TestPuzzle1 {
-
-
-
-
-
     @Test
     fun parseNumeralsTest() {
         val puzzleOne = PuzzleOne()
@@ -39,8 +34,6 @@ class TestPuzzle1 {
         assertEquals(142, puzzleOne.getSumOfCalibrationValues(testInput))
         assertEquals(307, puzzleOne.getSumOfCalibrationValues(testInput2))
     }
-
-
     @Test fun parseSpellTest() {
         val puzzleOne = PuzzleOne()
         assertEquals(Pair(3, 4), puzzleOne.parseSpelledNumerals("cpxtthree14"))
@@ -51,6 +44,5 @@ class TestPuzzle1 {
         assertEquals(Pair(2,2),puzzleOne.parseSpelledNumerals("two"))
         assertEquals(Pair(3,2),puzzleOne.parseSpelledNumerals("3tworxcbnqlhv"))
     }
-
 
 }

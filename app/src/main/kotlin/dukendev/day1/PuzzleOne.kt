@@ -1,6 +1,6 @@
 package dukendev.day1
 
-import java.io.File
+import dukendev.util.Util.Companion.getInputData
 
 class PuzzleOne {
 
@@ -13,11 +13,9 @@ class PuzzleOne {
     private val startMatch = setOf('o', 't', 'f', 'e', 'n', 's')
     private val endMatch = setOf('e', 'o', 'r', 'x', 'n', 't')
 
-    private fun getInputData(): List<String> {
-        val file =
-            File("/Users/sanjeetyadav/dev/advent-of-code-2023/app/src/main/kotlin/dukendev/day1/input.txt")
-        return file.readLines()
-    }
+    private val inputPath =
+        "/Users/sanjeetyadav/dev/adventOfCode2023/advent-of-code-2023-kotlin/app/src/main/kotlin/dukendev/day1/input.txt"
+
 
     /**
      * @input : each line has alpha numerals string
@@ -25,7 +23,7 @@ class PuzzleOne {
      * @answer : sum of all calibration values
      **/
 
-    fun getSumOfCalibrationValues(input: List<String> = getInputData()): Int {
+    fun getSumOfCalibrationValues(input: List<String> = getInputData(inputPath)): Int {
         return input.sumOf {
             val digits = parseSpelledNumerals(it)
             val x = getCalibrationValue(digits.first, digits.second)
@@ -42,23 +40,28 @@ class PuzzleOne {
         val spelledDigits: Pair<Pair<Int, Int>, Pair<Int, Int>> = getSpelledDigits(s)
         println("spell : ${spelledDigits.first} and ${spelledDigits.second}")
 
-        val finalList : List<Pair<Int,Int>> = listOf(numeralDigits.first,numeralDigits.second,spelledDigits.first,spelledDigits.second).filter {
+        val finalList: List<Pair<Int, Int>> = listOf(
+            numeralDigits.first,
+            numeralDigits.second,
+            spelledDigits.first,
+            spelledDigits.second
+        ).filter {
             it.first in 0..9999
         }
         var first = 0
         var second = 0
         var max = Int.MIN_VALUE
         var min = Int.MAX_VALUE
-        for(p in finalList){
-            max = maxOf(p.first,max)
-            min = minOf(p.first,min)
+        for (p in finalList) {
+            max = maxOf(p.first, max)
+            min = minOf(p.first, min)
         }
 
-        for(p in finalList) {
-            if(p.first == min){
+        for (p in finalList) {
+            if (p.first == min) {
                 first = p.second
             }
-            if(p.first == max){
+            if (p.first == max) {
                 second = p.second
             }
         }
