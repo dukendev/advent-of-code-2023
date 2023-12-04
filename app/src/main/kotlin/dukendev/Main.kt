@@ -4,9 +4,19 @@
 package dukendev
 
 import dukendev.day1.PuzzleOne
+import dukendev.day3.PuzzleThree
 
 
 fun main() {
+    solveDay3()
+}
+
+fun solveDay3() {
+    val puzzleThree = PuzzleThree()
+    puzzleThree.findSumOfEngineParts()
+}
+
+fun solveDay1() {
     val puzzleOne = PuzzleOne()
     println(puzzleOne.getSumOfCalibrationValues())
 }
