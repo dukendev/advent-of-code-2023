@@ -11,7 +11,7 @@ class PuzzleThree {
         "/Users/sanjeetyadav/dev/adventOfCode2023/advent-of-code-2023-kotlin/app/src/main/kotlin/dukendev/day3/test.txt"
 
     fun findSumOfEngineParts() {
-        val lines = getInputData(testPath)
+        val lines = getInputData(path)
         val grid = lines.map {
             it.toCharArray().toList()
         }
@@ -24,36 +24,54 @@ class PuzzleThree {
             for (j in 0..cols) {
                 val c = grid[i][j]
                 if (c.isDigit()) {
-                    num.add(grid[i][j])
+                    num.add(c)
                     matchStart = minOf(matchStart, j)
-                    println("number building : $num and start match $matchStart")
-                } else {
-                    //check to push in main list or clear
-                    if (num.isNotEmpty()) {
-                        println("validating $num from $matchStart to ${j - 1}")
-                        var isValid = true
-                        for (digit in matchStart until j) {
-                            isValid = isValid && alone(
-                                r = i,
-                                c = digit,
-                                grid = grid,
-                                isFirst = digit == matchStart,
-                                isLast = digit == j - 1
-                            )
+                    if(j == cols){
 
+                        var isValid = false
+                        for (digit in matchStart until j) {
+                            isValid = checkNeighbours(
+                                r = i, c = digit, grid = grid
+                            )
+                            if (isValid) {
+                                break
+                            }
                         }
-                        if (!isValid) {
-                            println("found ${num.toNumber()} at ($i,${j - 1})")
+                        if (isValid) {
+                            println("found ${num.toNumber()} at ($i,${matchStart})")
                             valid.add(num.toNumber())
+                        } else {
+                            println("rejected ${num.toNumber()} at ($i,${matchStart})")
                         }
-                        num.clear()
+
                         matchStart = cols
+                        num.clear()
+                    }
+                } else {
+                    if (num.isNotEmpty()) {
+
+                        var isValid = false
+                        for (digit in matchStart until j) {
+                            isValid = checkNeighbours(
+                                r = i, c = digit, grid = grid
+                            )
+                            if (isValid) {
+                                break
+                            }
+                        }
+                        if (isValid) {
+                            println("found ${num.toNumber()} at ($i,${matchStart})")
+                            valid.add(num.toNumber())
+                        } else {
+                            println("rejected ${num.toNumber()} at ($i,${matchStart})")
+                        }
                     }
 
+                    matchStart = cols
+                    num.clear()
                 }
             }
         }
-        println(valid)
         println(valid.sum())
     }
 
@@ -64,60 +82,26 @@ class PuzzleThree {
     }
 
 
-    private fun alone(
-        r: Int, c: Int, grid: List<List<Char>>, isLast: Boolean = false, isFirst: Boolean = false
+    private fun checkNeighbours(
+        r: Int, c: Int, grid: List<List<Char>>
     ): Boolean {
-        print("checking ${grid[r][c]} at ($r,$c)")
-        val up = (if (r > 0) grid.getOrNull(r - 1)?.get(c)  else '.') == '.'
-        val down = (if (r < grid.size - 1) grid.getOrNull(r + 1)?.get(c) else '.') == '.'
-        val back = grid[r].getOrElse(c - 1) { '.' } == '.'
-        val diaBackDown =
-            (if (r < grid.size - 1) grid.getOrNull(r + 1)?.getOrElse(c - 1) { '.' } else '.') == '.'
-        val diaBackUp =
-            (if (r > 0) grid.getOrNull(r - 1)?.getOrElse(c - 1) { '.' } else '.') == '.'
-        val diaFrontUp =
-            (if (r > 0) grid.getOrNull(r - 1)?.getOrElse(c + 1) { '.' } else '.') == '.'
-        val diaFrontDown =
-            (if (r < grid.size - 1) grid.getOrNull(r + 1)?.getOrElse(c + 1) { '.' } else '.') == '.'
-        val front = grid[r].getOrElse(c + 1) { '.' } == '.'
-
-        val representation = listOf(
-            listOf(diaBackUp.printC(), up.printC(), diaFrontUp.printC()),
-            listOf(back.printC(), 'd', front.printC()),
-            listOf(diaBackDown.printC(), down.printC(), diaFrontDown.printC())
-        )
-
-        println()
-        for (rw in representation) {
-            for (cl in rw) {
-                print(" $cl ")
-            }
-            println()
-        }
-
-        return when {
-            isFirst && !isLast -> {
-                val first = down && up && back && diaBackUp && diaBackDown && diaFrontDown && diaFrontUp
-                println("first alone $first")
-                first
-            }
-
-            isLast && !isFirst -> {
-                val last = down && up && front && diaFrontUp && diaFrontDown && diaBackUp && diaBackDown
-                println("last alone : $last")
-                last
-            }
-
-            else -> {
-                val mid = down && up && diaBackUp && diaBackDown && diaFrontDown && diaFrontUp
-                println("mid alone : $mid")
-                mid
+        var hasPart = false
+        outer@ for (rr in listOf(-1, 0, 1)) {
+            for (cc in listOf(-1, 0, 1)) {
+                val curR = r - rr
+                val curC = c - cc
+                if (curR >= grid.size || curR <= 0 || curC >= grid[0].size || curC <= 0) {
+                    continue
+                }
+                if (grid[curR][curC] != '.' && !grid[curR][curC].isDigit()) {
+                    hasPart = true
+                }
+                if (hasPart) {
+                    break@outer
+                }
             }
         }
-    }
-
-    private fun Boolean.printC(): Char {
-        return if (this) '.' else '+'
+        return hasPart
     }
 
 }
