@@ -13,7 +13,7 @@ fun main() {
 
 fun solveDay3() {
     val puzzleThree = PuzzleThree()
-    puzzleThree.findSumOfEngineParts()
+    puzzleThree.findSumOfEngineParts1()
 }
 
 fun solveDay1() {
