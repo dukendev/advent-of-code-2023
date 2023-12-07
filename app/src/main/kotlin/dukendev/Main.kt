@@ -5,10 +5,16 @@ package dukendev
 
 import dukendev.day1.PuzzleOne
 import dukendev.day3.PuzzleThree
+import dukendev.day5.PuzzleFive
 
 
 fun main() {
-    solveDay3()
+    solveDay5()
+}
+
+fun solveDay5() {
+    val puzzleFive = PuzzleFive()
+    puzzleFive.findNearestLocations()
 }
 
 fun solveDay3() {
