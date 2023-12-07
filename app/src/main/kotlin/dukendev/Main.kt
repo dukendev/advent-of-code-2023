@@ -6,10 +6,14 @@ package dukendev
 import dukendev.day1.PuzzleOne
 import dukendev.day3.PuzzleThree
 import dukendev.day5.PuzzleFive
+import kotlin.system.measureTimeMillis
 
 
 fun main() {
-    solveDay5()
+    val time = measureTimeMillis {
+        solveDay5()
+    }
+    println("solved in $time ms")
 }
 
 fun solveDay5() {

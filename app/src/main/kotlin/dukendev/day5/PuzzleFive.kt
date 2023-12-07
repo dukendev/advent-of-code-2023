@@ -7,9 +7,7 @@ import dukendev.util.Util.Companion.getNumberList
 class PuzzleFive {
 
     fun findNearestLocations() {
-        val input = Util.getRawInputData(path)
-        val infoParts = input.split("\n\n")
-        val almanac = infoParts.getAlmanac()
+        val almanac = getAlmanacFromInput()
         val nearest = almanac.seeds.asSequence().map {
             almanac.seedToSoilMap.getMapping(it)
         }.map {
@@ -28,6 +26,12 @@ class PuzzleFive {
         println(nearest)
     }
 
+    private fun getAlmanacFromInput(): Almanac {
+        val input = Util.getRawInputData(path)
+        val infoParts = input.split("\n\n")
+        return infoParts.getAlmanac()
+    }
+
     private fun List<Pair<LongRange, LongRange>>.getMapping(source: Long): Long {
         var mappedValue: Long? = null
         for (r in this) {
@@ -40,9 +44,7 @@ class PuzzleFive {
     }
 
     private fun findMappingFromRanges(
-        source: LongRange,
-        destination: LongRange,
-        target: Long
+        source: LongRange, destination: LongRange, target: Long
     ): Long {
         val low = source.first
         val high = source.last
