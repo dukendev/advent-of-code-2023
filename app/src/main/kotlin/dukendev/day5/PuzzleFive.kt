@@ -32,12 +32,28 @@ class PuzzleFive {
         var mappedValue: Long? = null
         for (r in this) {
             if (source in r.first) {
-                val index = r.first.toList().indexOf(source)
-                mappedValue = r.second.toList()[index]
+                mappedValue = findMappingFromRanges(r.first, r.second, source)
                 break
             }
         }
         return mappedValue ?: source
+    }
+
+    private fun findMappingFromRanges(
+        source: LongRange,
+        destination: LongRange,
+        target: Long
+    ): Long {
+        val low = source.first
+        val high = source.last
+        val mid = low + (high - low) / 2
+        return if (target >= mid) {
+            val offset = source.last - target
+            destination.last - offset
+        } else {
+            val offset = target - source.first
+            destination.first + offset
+        }
     }
 
     companion object {
