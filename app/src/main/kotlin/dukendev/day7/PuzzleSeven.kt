@@ -17,26 +17,21 @@ class PuzzleSeven {
         }.map { card ->
             card.copy(hand = card.hand.sortedBy { it.getCardValue() })
         }
-        val orderedLists =
-            cards.sortedBy { it.typeOrder }.groupBy { it.typeOrder }.map { it.value }.map { list -> list.sortByHighCards() }
+        val orderedLists = cards.sortedBy { it.typeOrder }.groupBy { it.typeOrder }.map { it.value }
+            .map { list -> list.sortByHighCards() }
         val sortedCards = orderedLists.flatten()
-       println(sortedCards)
+        println(sortedCards)
         var sum = 0
         sortedCards.forEachIndexed { index, camelCard ->
-            sum += (index+1).times(camelCard.bid)
+            sum += (index + 1).times(camelCard.bid)
         }
         println(sum)
     }
 
     private fun List<CamelCard>.sortByHighCards(): List<CamelCard> {
-        return this
-            .asSequence()
-            .sortedBy { it.hand[0].getCardValue() }
-            .sortedBy { it.hand[1].getCardValue() }
-            .sortedBy { it.hand[2].getCardValue() }
-            .sortedBy { it.hand[3].getCardValue() }
-            .sortedBy { it.hand[4].getCardValue() }
-            .toList()
+        return this.asSequence().sortedBy { it.hand[0].getCardValue() }
+            .sortedBy { it.hand[1].getCardValue() }.sortedBy { it.hand[2].getCardValue() }
+            .sortedBy { it.hand[3].getCardValue() }.sortedBy { it.hand[4].getCardValue() }.toList()
     }
 
     private fun Char.getCardValue(): Int {
