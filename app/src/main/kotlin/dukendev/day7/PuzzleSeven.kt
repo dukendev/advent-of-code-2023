@@ -11,61 +11,33 @@ class PuzzleSeven {
                 bid = it.split(" ")[1].trim().toInt(),
                 hand = it.split(" ")[0].trim().toCharArray().toList(),
                 typeOrder = 0,
-                freqMap = mapOf()
             )
         }.map {
             it.copy(typeOrder = it.hand.findOrder())
-        }.map { card ->
-            card.copy(hand = card.hand.sortedBy { it.getCardValue() })
-        }.map {
-            it.copy(freqMap = it.hand.calculateFrequency())
         }
-
-        val orderedLists = cards.sortedBy { it.typeOrder }.groupBy { it.typeOrder }.map { it.value }
+        val orderedLists = cards
+            .sortedBy { it.typeOrder }
+            .groupBy { it.typeOrder }
+            .map { it.value }
             .map { list -> list.sortByHighCards() }
         val sortedCards = orderedLists.flatten()
-        println(sortedCards)
-        var sum = 0
-        sortedCards.forEachIndexed { index, camelCard ->
-            sum += (index + 1).times(camelCard.bid)
+        val sum = sortedCards.foldIndexed(0) { index, acc, camelCard ->
+            acc + (index + 1) * camelCard.bid
         }
         println(sum)
     }
 
     private fun List<CamelCard>.sortByHighCards(): List<CamelCard> {
-        val sortedList = mutableListOf<CamelCard>()
-        when (this.first().typeOrder) {
-            7 -> {
-                sortedList.addAll(this.sortedBy { it.hand.first().getCardValue() })
+        val comparator = Comparator<CamelCard> { card1, card2 ->
+            for (i in 0 until card1.hand.size) {
+                val diff = card1.hand[i].getCardValue() - card2.hand[i].getCardValue()
+                if (diff != 0) {
+                    return@Comparator diff
+                }
             }
-
-            6, 5 -> {
-                sortedList.addAll(this.sortedBy {
-                    if (it.freqMap[it.hand.first()]!! < it.freqMap[it.hand.last()]!!) {
-                        it.hand.first().getCardValue()
-                    } else {
-                        it.hand.last().getCardValue()
-                    }
-                }.sortedBy {
-                    if (it.freqMap[it.hand.first()]!! > it.freqMap[it.hand.last()]!!) {
-                        it.hand.first().getCardValue()
-                    } else {
-                        it.hand.last().getCardValue()
-                    }
-                })
-            }
-            // todo : impl for 4 to 2 case for type order
-            else -> {
-                sortedList.addAll(
-                    this.asSequence().sortedBy { it.hand[0].getCardValue() }
-                        .sortedBy { it.hand[1].getCardValue() }
-                        .sortedBy { it.hand[2].getCardValue() }
-                        .sortedBy { it.hand[3].getCardValue() }
-                        .sortedBy { it.hand[4].getCardValue() }.toList()
-                )
-            }
+            return@Comparator 0
         }
-        return sortedList
+        return this.sortedWith(comparator)
     }
 
     private fun Char.getCardValue(): Int {
@@ -112,5 +84,5 @@ class PuzzleSeven {
 }
 
 data class CamelCard(
-    val hand: List<Char>, val bid: Int, val typeOrder: Int, val freqMap: Map<Char, Int>
+    val hand: List<Char>, val bid: Int, val typeOrder: Int
 )
