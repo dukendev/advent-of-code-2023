@@ -6,7 +6,7 @@ class PuzzleSeven {
 
     fun calcWinnings() {
         val input = Util.getInputData(input)
-        val cards = input.map {
+        val sum = input.asSequence().map {
             CamelCard(
                 bid = it.split(" ")[1].trim().toInt(),
                 hand = it.split(" ")[0].trim().toCharArray().toList(),
@@ -14,16 +14,14 @@ class PuzzleSeven {
             )
         }.map {
             it.copy(typeOrder = it.hand.findOrder())
-        }
-        val orderedLists = cards
-            .sortedBy { it.typeOrder }
+        }.sortedBy { it.typeOrder }
             .groupBy { it.typeOrder }
             .map { it.value }
             .map { list -> list.sortByHighCards() }
-        val sortedCards = orderedLists.flatten()
-        val sum = sortedCards.foldIndexed(0) { index, acc, camelCard ->
-            acc + (index + 1) * camelCard.bid
-        }
+            .flatten()
+            .foldIndexed(0) { index, acc, camelCard ->
+                acc + (index + 1) * camelCard.bid
+            }
         println(sum)
     }
 
